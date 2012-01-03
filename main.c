@@ -10,8 +10,10 @@ int main(int argc, char *arch[]){
   m->fp_init_hashmap = init_hashmap;
   m->fp_init_hashmap(m);
 
-  m->fp_addElement("sander",3,m);
+  printf("%d \n",m->fp_addElement("sander",3,m));
+  printf("%d \n",m->fp_addElement("sander",6,m));
   printf("%d \n",m->fp_getElement("sander",m));
+  iterate(m);
   return 0;
 }
 
