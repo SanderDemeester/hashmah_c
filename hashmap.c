@@ -1,25 +1,47 @@
 #include "hashmap.h"
 static unsigned int cal_hash(char *key);
-
+static int expaned_array(hashmap *hashmap);
+static int kwadratische_peiling(int hash, int i);
 int addElement(char *key, int value,hashmap* hashmap){
-  unsigned int hash = (cal_hash(key) % DEFAULT_SIZE);
+  unsigned int hash = (cal_hash(key) % hashmap->capaciteit);
   if(hashmap->array_position[hash] == 0){
     hashmap->array_position[hash]=1;
-    hashMapElement e = {value};
+    hashMapElement *e = (hashMapElement*) malloc(sizeof(hashMapElement));
+    e->value = value;
+    e->key = key;
     hashmap->elementArray[hash] = e;
     hashmap->number_of_elements++;
-    hashmap->current_loadfactor = (hashmap->capaciteit/hashmap->number_of_elements);
-    printf("load factor: %d \n",hashmap->current_loadfactor);
-    if(hashmap->current_loadfactor >= LOAD_FACTOR)
-      printf("%s \n","time for a rehash");
+    hashmap->current_loadfactor = (double)hashmap->number_of_elements/(double)hashmap->capaciteit;
+    printf("first state: %d \n",hash);
   }else{
     /*doe iets slims*/
     printf("%s \n","hash collision");
+    unsigned int hash2 = hash;
+    int i = 0;
+    while(hashmap->array_position[hash2] != 0){
+      if(!strcmp(key,hashmap->elementArray[hash2]->key))
+	 return -1;
+	  hash2 = kwadratische_peiling(hash,i) %  hashmap->capaciteit;
+	  i++;
+    }
+    printf("second state %d %d \n",hash2,i);
+    hashMapElement *e = (hashMapElement*) malloc(sizeof(hashMapElement));
+    e->value = value;
+    e->key = key;
+    hashmap->array_position[hash2] = 1;
+    hashmap->elementArray[hash2] = e;
+    hashmap->number_of_elements++;
+    hashmap->current_loadfactor = (double)hashmap->number_of_elements/(double)hashmap->capaciteit;
   }
+  if(hashmap->current_loadfactor >= LOAD_FACTOR)
+    expaned_array(hashmap);
   
-  return 0;
-}
+  return 0;}
+  
 
+void* getElement(char *key,hashmap* hashmap){
+  return (void*)hashmap->elementArray[cal_hash(key) % hashmap->capaciteit]->value;
+}
 int removeElement(int element){
   printf("%s \n","remove Element");
   return 0;
@@ -34,8 +56,9 @@ void init_hashmap(hashmap *m){
   printf("%s \n","init van de hashmap");
   for(;i <= DEFAULT_SIZE; i++)
     m->array_position[i] = 0;
-  m->elementArray = (hashMapElement*) calloc(DEFAULT_SIZE*sizeof(hashMapElement),sizeof(hashMapElement));
+  m->elementArray = (hashMapElement**) calloc(DEFAULT_SIZE*sizeof(hashMapElement),sizeof(hashMapElement*));
   m->fp_addElement = addElement;
+  m->fp_getElement = getElement;
   m->fp_removeElement = removeElement;
   m->fp_clean_up = clean_up;
   m->number_of_elements = 0;
@@ -44,6 +67,9 @@ void init_hashmap(hashmap *m){
 }
 
 static int expaned_array(hashmap *hashmap){
+  int new_capacity = hashmap->capaciteit*2;
+  hashmap->elementArray = (hashMapElement**) realloc(hashmap->elementArray,hashmap->capaciteit * sizeof(hashMapElement*));
+  hashmap->current_loadfactor = (double)hashmap->number_of_elements/(double)hashmap->capaciteit;
 }
 static unsigned int cal_hash(char *value){
   unsigned int hash = 0;
@@ -57,4 +83,7 @@ static unsigned int cal_hash(char *value){
   hash ^= (hash >> 11);
   hash += (hash << 15);
   return hash;
+}
+static int kwadratische_peiling(int hash, int i){
+    return hash + (i << 1);
 }
