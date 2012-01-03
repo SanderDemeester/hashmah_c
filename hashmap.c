@@ -2,6 +2,7 @@
 static unsigned int cal_hash(char *key);
 static int expaned_array(hashmap *hashmap);
 static int kwadratische_peiling(int hash, int i);
+
 int addElement(char *key, int value,hashmap* hashmap){
   unsigned int hash = (cal_hash(key) % hashmap->capaciteit);
   if(hashmap->array_position[hash] == 0){
@@ -68,19 +69,30 @@ void init_hashmap(hashmap *m){
 }
 
 static int expaned_array(hashmap *hashmap){
-  int new_capacity = hashmap->capaciteit*2;
+  printf("%s \n","expanding van de array");
+  int old_array_position[hashmap->capaciteit];
   int i = 0;
   hashMapElement** old_array = hashmap->elementArray;
+  
+  hashmap->capaciteit = hashmap->capaciteit*2;
   hashmap->elementArray = (hashMapElement**) realloc(hashmap->elementArray,hashmap->capaciteit * sizeof(hashMapElement*));
   hashmap->current_loadfactor = (double)hashmap->number_of_elements/(double)hashmap->capaciteit;
-  
-  for(; i <= hashmap->capaciteit/2; i++){
-    if(hashmap->array_position[i] == 1){
-      printf("%d \n",i);
-      printf("%s \n",hashmap->elementArray[i]->value);
+
+  for(; i <= hashmap->capaciteit/2;i++)
+    old_array_position[i] = hashmap->array_position[i];
+  for(;i <= hashmap->capaciteit; i++)
+    hashmap->array_position[i] = 0;
+
+  hashmap->number_of_elements = 0;
+  for(i = 0; i <= (hashmap->capaciteit/2); i++){
+    if(old_array_position == 1){
+      /*recalculate the new hash values*/
+      printf("%f \n",i);
+      addElement(old_array[i]->key,old_array[i]->value,hashmap);
     }
   }
 }
+
 static unsigned int cal_hash(char *value){
   unsigned int hash = 0;
   unsigned int i = 0;
