@@ -19,7 +19,7 @@ int addElement(char *key, int value,hashmap* hashmap){
     unsigned int hash2 = hash;
     int i = 0;
     while(hashmap->array_position[hash2] != 0){
-      if(!strcmp(key,hashmap->elementArray[hash2]->key))
+      if(strcmp(key,hashmap->elementArray[hash2]->key) != 0)
 	 return -1;
 	  hash2 = kwadratische_peiling(hash,i) %  hashmap->capaciteit;
 	  i++;
