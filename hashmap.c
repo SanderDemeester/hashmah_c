@@ -36,7 +36,8 @@ int addElement(char *key, int value,hashmap* hashmap){
   if(hashmap->current_loadfactor >= LOAD_FACTOR)
     expaned_array(hashmap);
   
-  return 0;}
+  return 0;
+}
   
 
 void* getElement(char *key,hashmap* hashmap){
@@ -68,8 +69,13 @@ void init_hashmap(hashmap *m){
 
 static int expaned_array(hashmap *hashmap){
   int new_capacity = hashmap->capaciteit*2;
+  int i;
   hashmap->elementArray = (hashMapElement**) realloc(hashmap->elementArray,hashmap->capaciteit * sizeof(hashMapElement*));
   hashmap->current_loadfactor = (double)hashmap->number_of_elements/(double)hashmap->capaciteit;
+  for(; i <= hashmap->capaciteit/2; i++){
+    if(hashmap->array_position[i] == 1)
+      printf("%s \n","ok");
+  }
 }
 static unsigned int cal_hash(char *value){
   unsigned int hash = 0;
