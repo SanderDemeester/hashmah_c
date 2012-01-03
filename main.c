@@ -8,8 +8,6 @@ int main(int argc, char *arch[]){
   
   m->fp_init_hashmap = init_hashmap;
   m->fp_init_hashmap(m);
-  printf("%f \n",m->hashmap_parameter->current_loadfactor);
-  printf("%d \n",m->hashmap_parameter->capaciteit);
   
   return 0;
 }

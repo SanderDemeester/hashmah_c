@@ -8,6 +8,5 @@ main.o: main.c
 hashmap.o: hashmap.c
 	$(CC) -c hashmap.c
 clean:
-	rm a.out
-	rm *.o
-	git rm a.out && git rm *.o
+	rm -f a.out
+	rm -r *.o
