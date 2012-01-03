@@ -69,12 +69,16 @@ void init_hashmap(hashmap *m){
 
 static int expaned_array(hashmap *hashmap){
   int new_capacity = hashmap->capaciteit*2;
-  int i;
+  int i = 0;
+  hashMapElement** old_array = hashmap->elementArray;
   hashmap->elementArray = (hashMapElement**) realloc(hashmap->elementArray,hashmap->capaciteit * sizeof(hashMapElement*));
   hashmap->current_loadfactor = (double)hashmap->number_of_elements/(double)hashmap->capaciteit;
+  
   for(; i <= hashmap->capaciteit/2; i++){
-    if(hashmap->array_position[i] == 1)
-      printf("%s \n","ok");
+    if(hashmap->array_position[i] == 1){
+      printf("%d \n",i);
+      printf("%s \n",hashmap->elementArray[i]->value);
+    }
   }
 }
 static unsigned int cal_hash(char *value){
