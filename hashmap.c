@@ -1,6 +1,4 @@
-#ifndef _hashmap
 #include "hashmap.h"
-#endif
 static unsigned int cal_hash(char *key);
 
 int addElement(char *key, int value,hashmapP* hashmap_p){
@@ -44,6 +42,7 @@ void init_hashmap(hashmap *m){
   m->hashmap_parameter->number_of_elements = 0;
   m->hashmap_parameter->current_loadfactor = 0;
   m->hashmap_parameter->capaciteit = DEFAULT_SIZE;
+  printf("%d \n",m->hashmap_parameter->current_loadfactor);
 }
 
 static int expaned_array(hashmap *hashmap){

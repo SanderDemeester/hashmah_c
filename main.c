@@ -8,6 +8,8 @@ int main(int argc, char *arch[]){
   
   m->fp_init_hashmap = init_hashmap;
   m->fp_init_hashmap(m);
-  m->fp_addElement("sander",2,m->hashmap_parameter);
+  printf("%d \n",m->hashmap_parameter->current_loadfactor);
+  printf("%d \n",m->hashmap_parameter->capaciteit);
+  
   return 0;
 }
