@@ -21,7 +21,7 @@ typedef struct hashmap{
   int (*fp_addElement)(char *,int,hashmapP*); //0 for succes, -1 for fail
   int (*fp_removeElement)(int); //0 for success, -1 for fail
   void (*fp_clean_up)(); //vrijmaken van geheugen
-  void (*fp_init_hashmap)(hashmap); //init van de hashmap
+  void (*fp_init_hashmap)(struct hashmap *); //init van de hashmap
 }hashmap;
 
 int addElement(char *,int,hashmapP*);
