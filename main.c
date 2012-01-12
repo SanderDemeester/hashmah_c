@@ -19,8 +19,10 @@ int main(int argc, char *arch[]){
   m->fp_addElement("jesdsdfsdffsdfroen",7,m);
   m->fp_addElement("jesdfsdfsdfroen",7,m);
   m->fp_addElement("jsdfesdfsdfroen",7,m);
+  m->fp_addElement("jeroen",22,m);
 
-
+  printf("%d \n",m->fp_getElement("sander",m));
+  printf("%d \n",m->fp_getElement("jeroen",m));
  
   return 0;
 }

@@ -2,6 +2,7 @@
 static unsigned int cal_hash(char *key);
 static int expaned_array(hashmap *hashmap);
 static int kwadratische_peiling(int hash, int i);
+static void* recu_search(hashmap *hashmap, char *key, int pos);
 
 int addElement(char *key, int value,hashmap* hashmap){
   unsigned int hash = (cal_hash(key) % hashmap->capaciteit);
@@ -42,7 +43,13 @@ int addElement(char *key, int value,hashmap* hashmap){
   
 
 void* getElement(char *key,hashmap* hashmap){
-  return (void*)hashmap->elementArray[cal_hash(key) % hashmap->capaciteit]->value;
+  
+  if(!strcmp(hashmap->elementArray[cal_hash(key) % hashmap->capaciteit]->key,key)){
+      return (void*)hashmap->elementArray[cal_hash(key) % hashmap->capaciteit]->value;
+  }else{
+    return recu_search(hashmap,key,1);
+  }
+
 }
 int removeElement(int element){
   printf("%s \n","remove Element");
@@ -106,6 +113,8 @@ static int expaned_array(hashmap *hashmap){
   }
   hashmap->capaciteit = hashmap->capaciteit*2;
   hashmap->array_position = new_aantal_pos;
+
+  /*FREE*/
 }
 
 static unsigned int cal_hash(char *value){
@@ -123,4 +132,10 @@ static unsigned int cal_hash(char *value){
 }
 static int kwadratische_peiling(int hash, int i){
     return hash + (i << 1);
+}
+static void* recu_search(hashmap *hashmap, char *key, int pos){
+  if(!strcmp(hashmap->elementArray[kwadratische_peiling(cal_hash(key),pos)]->value,key))
+    return (void*) hashmap->elementArray[kwadratische_peiling(cal_hash(key),pos)]->value;
+  else
+    return recu_search(hashmap,key,pos++);
 }
