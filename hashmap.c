@@ -56,9 +56,12 @@ void clean_up(){
 void init_hashmap(hashmap *m){
   int i = 0;
   printf("%s \n","init van de hashmap");
-  for(;i <= DEFAULT_SIZE; i++)
+  m->array_position = (int*) malloc(sizeof(int)*DEFAULT_SIZE);
+  for(;i < DEFAULT_SIZE; i++)
     m->array_position[i] = 0;
   m->elementArray = (hashMapElement**) calloc(DEFAULT_SIZE*sizeof(hashMapElement),sizeof(hashMapElement*));
+  for(i=0; i <= DEFAULT_SIZE; i++)
+    m->elementArray[i] = (hashMapElement*) malloc(sizeof(hashMapElement));
   m->fp_addElement = addElement;
   m->fp_getElement = getElement;
   m->fp_removeElement = removeElement;
@@ -70,27 +73,39 @@ void init_hashmap(hashmap *m){
 
 static int expaned_array(hashmap *hashmap){
   printf("%s \n","expanding van de array");
-  int old_array_position[hashmap->capaciteit];
-  int i = 0;
-  hashMapElement** old_array = hashmap->elementArray;
+  int i;
   
-  hashmap->capaciteit = hashmap->capaciteit*2;
-  hashmap->elementArray = (hashMapElement**) realloc(hashmap->elementArray,hashmap->capaciteit * sizeof(hashMapElement*));
-  hashmap->current_loadfactor = (double)hashmap->number_of_elements/(double)hashmap->capaciteit;
+  hashMapElement **old_elementArray = calloc(hashmap->number_of_elements,sizeof(hashMapElement*));
+  hashMapElement **new_elementArray;
+  int* new_aantal_pos;
 
-  for(; i <= hashmap->capaciteit/2;i++)
-    old_array_position[i] = hashmap->array_position[i];
-  for(;i <= hashmap->capaciteit; i++)
-    hashmap->array_position[i] = 0;
+  for(i = 0; i < hashmap->capaciteit;i++){
+    old_elementArray[i] = malloc(sizeof(hashMapElement));
+    if(hashmap->array_position[i] == 1)
+      *old_elementArray[i] = *hashmap->elementArray[i];
+  }
+  
 
-  hashmap->number_of_elements = 0;
-  for(i = 0; i <= (hashmap->capaciteit/2); i++){
-    if(old_array_position == 1){
-      /*recalculate the new hash values*/
-      printf("%f \n",i);
-      addElement(old_array[i]->key,old_array[i]->value,hashmap);
+  new_elementArray = (hashMapElement*) realloc(hashmap->elementArray, (hashmap->capaciteit*2)*sizeof(hashMapElement*));
+  new_aantal_pos = (int*) realloc(hashmap->array_position, (hashmap->capaciteit*2)*sizeof(int));
+  hashmap->elementArray = new_elementArray;
+  
+  for(i=0; i < (hashmap->capaciteit*2);i++){
+    hashmap->elementArray[i] = (hashMapElement*) calloc(1,sizeof(hashMapElement*));
+    new_aantal_pos[i] = 0;
+  }
+
+  for(i=0; i < hashmap->capaciteit; i++){
+    printf("%d \n",i);
+    if(hashmap->array_position[i] == 1){
+      if(new_aantal_pos[cal_hash(old_elementArray[i]->key) % (hashmap->capaciteit*2)] == 0){
+	new_aantal_pos[cal_hash(old_elementArray[i]->key) % (hashmap->capaciteit*2)] = 1;
+	*hashmap->elementArray[cal_hash(old_elementArray[i]->key) % (hashmap->capaciteit*2)] = *old_elementArray[i];
+      }
     }
   }
+  hashmap->capaciteit = hashmap->capaciteit*2;
+  hashmap->array_position = new_aantal_pos;
 }
 
 static unsigned int cal_hash(char *value){

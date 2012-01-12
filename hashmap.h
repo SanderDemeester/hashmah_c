@@ -11,7 +11,7 @@ typedef struct hashMapElement{
 
 typedef struct hashmap{
   hashMapElement **elementArray;
-  int array_position[DEFAULT_SIZE];
+  int *array_position;
   int number_of_elements;
   int capaciteit;
   double current_loadfactor;
