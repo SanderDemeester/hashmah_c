@@ -51,8 +51,14 @@ void* getElement(char *key,hashmap* hashmap){
   }
 
 }
-int removeElement(int element){
+int removeElement(char *key, hashmap* hashmap){
   printf("%s \n","remove Element");
+  /*first calulate the hash*/
+  unsigned int hash = cal_hash(key);
+  if(!strcmp(hashmap->elementArray[hash % hashmap->capaciteit]->key,key)){
+    hashmap->array_position[hash % hashmap->capaciteit] = 0;
+    free(hashmap->elementArray[hash % hashmap->capaciteit]);
+  }
   return 0;
 }
 

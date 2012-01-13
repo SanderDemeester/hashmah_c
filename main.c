@@ -23,7 +23,9 @@ int main(int argc, char *arch[]){
 
   printf("%d \n",m->fp_getElement("sander",m));
   printf("%d \n",m->fp_getElement("jeroen",m));
- 
+  
+  m->fp_removeElement("jeroen",m);
+  
   return 0;
 }
 
