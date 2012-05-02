@@ -22,7 +22,6 @@ typedef struct hashmap{
   void (*fp_init_hashmap)(struct hashmap *); //init van de hashmap
 }hashmap;
 
-
 int addElement(char *,int,hashmap*);
 void* getElement(char*,hashmap*);
 int removeElement(char*,hashmap*);

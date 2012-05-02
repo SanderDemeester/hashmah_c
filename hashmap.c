@@ -1,4 +1,6 @@
 #include "hashmap.h"
+#include <stdio.h>
+#include <stdlib.h>
 static unsigned int cal_hash(char *key);
 static int expaned_array(hashmap *hashmap);
 static int kwadratische_peiling(int hash, int i);
